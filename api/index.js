@@ -17,21 +17,21 @@ dotenv.config();
 // ===============================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// ✅ Correct public directory path for Vercel
-app.use(express.static(path.join(__dirname, "../public")));
-
-// ✅ EJS setup - make sure the path points correctly for Vercel
+app.use(express.static(path.join(__dirname, "../public"))); // ✅ Serve static files
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../views"));
+app.set("views", path.join(__dirname, "../views")); // ✅ EJS templates path
 
 // ===============================
 //  Database Connection
 // ===============================
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.log("❌ MongoDB connection error:", err));
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 15000, // Wait up to 15 seconds before timeout
+  })
+  .then(() => console.log("✅ MongoDB connected successfully"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err.message));
 
 // ===============================
 //  Express Session
@@ -62,17 +62,13 @@ app.use("/", mainRoutes);
 app.use("/admin", adminRoutes);
 
 // ===============================
-//  404 Page - FIXED PATH
+//  404 Page
 // ===============================
 app.use((req, res) => {
-  // ✅ Ensure this file exists: /views/pages/404.ejs
-  res.status(404).render("pages/404", {
-    message: "Page Not Found",
-  });
+  res.status(404).render("pages/404", { message: "Page Not Found" });
 });
 
 // ===============================
-//  ❌ DO NOT use app.listen() in Vercel
-//  ✅ Export the app instead
+//  ✅ Export app for Vercel (no app.listen())
 // ===============================
 module.exports = app;
