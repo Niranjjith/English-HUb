@@ -1,5 +1,5 @@
 // ===============================
-//  Campus English Hub - Vercel Version
+//  Campus English Hub - Vercel Version (FINAL)
 // ===============================
 
 const express = require("express");
@@ -12,12 +12,18 @@ const path = require("path");
 const app = express();
 dotenv.config();
 
-// Middleware setup
+// ===============================
+//  Middleware setup
+// ===============================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../public"))); // ⬅️ use ../ for correct path
+
+// ✅ Correct public directory path for Vercel
+app.use(express.static(path.join(__dirname, "../public")));
+
+// ✅ EJS setup - make sure the path points correctly for Vercel
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../views")); // ⬅️ set correct path to EJS files
+app.set("views", path.join(__dirname, "../views"));
 
 // ===============================
 //  Database Connection
@@ -56,10 +62,13 @@ app.use("/", mainRoutes);
 app.use("/admin", adminRoutes);
 
 // ===============================
-//  404 Page
+//  404 Page - FIXED PATH
 // ===============================
-app.get("*", (req, res) => {
-  res.status(404).render("pages/404", { message: "Page Not Found" });
+app.use((req, res) => {
+  // ✅ Ensure this file exists: /views/pages/404.ejs
+  res.status(404).render("pages/404", {
+    message: "Page Not Found",
+  });
 });
 
 // ===============================
