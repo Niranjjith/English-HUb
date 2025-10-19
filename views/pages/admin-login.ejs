@@ -1,0 +1,28 @@
+<%- include("../partials/header") %>
+
+<div class="d-flex align-items-center justify-content-center vh-100 bg-light">
+  <div class="card shadow-lg p-4 border-0" style="max-width: 400px; width: 100%;">
+    <div class="text-center mb-3">
+      <h3 class="fw-bold text-primary">Admin Login</h3>
+      <p class="text-muted small">Campus English Hub</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-danger text-center"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/admin/login">
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" placeholder="admin@gmail.com" required>
+      </div>
+      <div class="mb-3">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 fw-semibold">Login</button>
+    </form>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

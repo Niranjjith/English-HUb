@@ -1,0 +1,145 @@
+<%- include("../partials/header") %>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 bg-primary text-white p-4 vh-100 position-fixed">
+      <h4 class="fw-bold mb-4">Admin Panel</h4>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2"><a href="#lessons" class="nav-link text-white">Manage Lessons</a></li>
+        <li class="nav-item mb-2"><a href="#quizzes" class="nav-link text-white">Manage Quizzes</a></li>
+        <li class="nav-item mt-4"><a href="/admin/logout" class="btn btn-light w-100 fw-semibold">Logout</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 py-4">
+      <div class="container">
+        <h2 class="fw-bold text-primary mb-4">Welcome, <%= admin.email %></h2>
+
+        <!-- Add Lesson -->
+        <section id="lessons" class="mb-5">
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white">
+              <h5 class="fw-bold text-primary mb-0">Add New Lesson</h5>
+            </div>
+            <div class="card-body">
+              <form method="POST" action="/admin/add-lesson">
+                <input type="text" name="title" class="form-control mb-2" placeholder="Lesson Title" required>
+                <textarea name="content" class="form-control mb-3" placeholder="Lesson Content" rows="3" required></textarea>
+                <button type="submit" class="btn btn-success fw-semibold">Add Lesson</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Lessons Table -->
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+              <h5 class="fw-bold text-primary mb-0">All Lessons</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+              <% lessons.forEach(lesson => { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong><%= lesson.title %></strong>
+                  </div>
+                  <div>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editLesson<%= lesson._id %>">Edit</button>
+                    <a href="/admin/delete-lesson/<%= lesson._id %>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this lesson?');">Delete</a>
+                  </div>
+                </li>
+
+                <!-- Edit Lesson Modal -->
+                <div class="modal fade" id="editLesson<%= lesson._id %>" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Edit Lesson</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <form method="POST" action="/admin/edit-lesson/<%= lesson._id %>">
+                        <div class="modal-body">
+                          <input type="text" name="title" class="form-control mb-2" value="<%= lesson.title %>" required>
+                          <textarea name="content" class="form-control" rows="3" required><%= lesson.content %></textarea>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Add Quiz -->
+        <section id="quizzes">
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white">
+              <h5 class="fw-bold text-primary mb-0">Add New Quiz Question</h5>
+            </div>
+            <div class="card-body">
+              <form method="POST" action="/admin/add-quiz">
+                <input type="text" name="question" class="form-control mb-2" placeholder="Question" required>
+                <input type="text" name="option1" class="form-control mb-2" placeholder="Option 1" required>
+                <input type="text" name="option2" class="form-control mb-2" placeholder="Option 2" required>
+                <input type="text" name="option3" class="form-control mb-2" placeholder="Option 3" required>
+                <input type="text" name="option4" class="form-control mb-2" placeholder="Option 4" required>
+                <input type="text" name="correctAnswer" class="form-control mb-3" placeholder="Correct Answer" required>
+                <button type="submit" class="btn btn-primary fw-semibold">Add Quiz</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Quizzes Table -->
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+              <h5 class="fw-bold text-primary mb-0">All Quizzes</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+              <% quizzes.forEach(q => { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong><%= q.question %></strong>
+                  </div>
+                  <div>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editQuiz<%= q._id %>">Edit</button>
+                    <a href="/admin/delete-quiz/<%= q._id %>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this quiz?');">Delete</a>
+                  </div>
+                </li>
+
+                <!-- Edit Quiz Modal -->
+                <div class="modal fade" id="editQuiz<%= q._id %>" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Edit Quiz</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <form method="POST" action="/admin/edit-quiz/<%= q._id %>">
+                        <div class="modal-body">
+                          <input type="text" name="question" class="form-control mb-2" value="<%= q.question %>" required>
+                          <% q.options.forEach((opt, idx) => { %>
+                            <input type="text" name="option<%= idx+1 %>" class="form-control mb-2" value="<%= opt %>" required>
+                          <% }) %>
+                          <input type="text" name="correctAnswer" class="form-control" value="<%= q.correctAnswer %>" required>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

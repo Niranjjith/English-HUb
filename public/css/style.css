@@ -1,0 +1,30 @@
+/* ADMIN DASHBOARD STYLING */
+.nav-link {
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+
+.card-header {
+  border-bottom: 2px solid #1a73e8 !important;
+}
+
+.card {
+  border-radius: 15px;
+}
+
+.btn-success, .btn-primary {
+  border-radius: 8px;
+}
+/* Admin Dashboard Enhancements */
+.modal-content {
+  border-radius: 12px;
+}
+.btn-outline-primary:hover, .btn-outline-danger:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+}

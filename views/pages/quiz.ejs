@@ -1,0 +1,56 @@
+<%- include("../partials/header") %>
+
+<section class="hero py-5 mb-4 text-center text-white" style="background: linear-gradient(135deg, #1a73e8, #004ba0);">
+  <div class="container">
+    <h1 class="display-6 fw-bold">Let’s Test Your English!</h1>
+    <p class="lead">Answer the questions below and see how well you do!</p>
+  </div>
+</section>
+
+<section class="container py-4">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-primary">English Practice Quiz</h2>
+    <p class="text-muted">Choose the correct answers and click submit.</p>
+  </div>
+
+  <% if (quizzes.length === 0) { %>
+    <div class="alert alert-info text-center">No quiz questions yet. Check back soon!</div>
+  <% } else { %>
+    <div id="quiz-container">
+      <% quizzes.forEach((q, index) => { %>
+        <div class="card mb-4 shadow-sm quiz-card" data-question-index="<%= index %>">
+          <div class="card-body">
+            <h5 class="fw-semibold"><%= index + 1 %>. <%= q.question %></h5>
+            <% q.options.forEach((opt, optIndex) => { %>
+              <div class="form-check mt-2">
+                <input class="form-check-input" type="radio" name="q<%= index %>" value="<%= opt %>" id="q<%= index %>opt<%= optIndex %>">
+                <label class="form-check-label" for="q<%= index %>opt<%= optIndex %>">
+                  <%= opt %>
+                </label>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="text-center mt-4">
+      <button id="submitQuiz" class="btn btn-lg btn-primary px-5">Submit</button>
+    </div>
+
+    <div id="resultContainer" class="text-center mt-5 d-none">
+      <div id="successMessage" class="alert alert-success d-inline-block fade show mt-3 px-4 py-3 fw-semibold shadow-sm" style="display:none;">
+        ✅ Successfully submitted!
+      </div>
+      <h3 class="fw-bold text-success mt-3">Your Score: <span id="score">0</span>/<%= quizzes.length %></h3>
+      <p class="text-muted">Review your answers above.</p>
+      <button id="retryQuiz" class="btn btn-outline-primary mt-3">Try Again</button>
+    </div>
+  <% } %>
+</section>
+
+<script>
+  window.quizAnswers = <%- JSON.stringify(answers) %>;
+</script>
+
+<%- include("../partials/footer") %>
